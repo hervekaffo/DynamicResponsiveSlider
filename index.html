@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TEST AUTOMATIC SLIDER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600,700' rel='stylesheet' type='text/css'>
+<link href="assets/css/bootstrapTheme.css" rel="stylesheet">
+<link href="assets/css/custom.css" rel="stylesheet">
+
+<!-- Owl Carousel Assets -->
+<link href="owl-carousel/owl.carousel.css" rel="stylesheet">
+<link href="owl-carousel/owl.theme.css" rel="stylesheet">
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="">
+<script src="assets/js/jquery-1.9.1.min.js"></script>
+<script src="js/plugins/handlebars.js"></script>
+<script src="owl-carousel/owl.carousel.js"></script>
+<script src="assets/js/bootstrap-collapse.js"></script>
+<script src="assets/js/bootstrap-transition.js"></script>
+<script src="assets/js/bootstrap-tab.js"></script>
+<script src="js/plugins/jquery.newsTicker.min.js"></script>
+</head>
+<body>
+<div class="container">
+<div id="bg"></div>
+<div class="row">
+  <div class="span1"></div>
+  <div  id="title" class="span10" style="height:58px; padding:0 5px;"> 
+    <div id="picture_caption" style="overflow:hidden;height:50px; width:inherit; margin-top:10px; position:absolute;">
+      <h3 style=" text-wrap:none; font-size:21px; line-height:24px;color:#ffffff; font-weight:700; margin:0" id="event_name"></h3>
+      <small style="color:#c5c5c5; text-transform:capitalize" id="cluster_name"></small> </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span1"></div>
+  <div class="span7">
+    <div id="sync1" class="owl-carousel"> 
+      <script id="slides_template" type="text/x-handlebars-template">
+                    {{#each this}}
+                    {{#each theme}}
+                      {{#each medium}}
+                          <div class="item">
+						  	<img class="picture" src="{{{path}}}" data-cluster="{{{../../name}}}" data-theme="{{{../name}}}" data-caption="{{{caption}}}" data-file_time="{{{../file_time}}}"/>
+                          </div>
+                      {{/each}}
+                    {{/each}}
+                  {{/each}}
+            </script> 
+    </div>
+    <div id="sync2" class="owl-carousel"> 
+      <script id="preview_template" type="text/x-handlebars-template">
+                {{#each this}}
+                {{#each theme}}
+                  {{#each medium}}
+                      <div class="item">
+					  <img src="{{{path}}}"/>
+                      </div>
+                  {{/each}}
+                {{/each}}
+              {{/each}}
+		</script> 
+    </div>
+      <div>
+  	<div class="newsticker_headlines">UPDATES</div>
+    <ul class="newsticker">
+	  <li>update 1: this is the update 1</li>
+	  <li>update 2: this is the update 2</li>
+	  <li>update 3: this is the update 3 </li>
+	  <li><strong>Update 4 </strong>update 4: this is the update 4 </li>
+	  <li><strong>Update 5 </strong>This is the update 5 </li>
+   </ul>
+  </div>
+  </div>
+  <div class="span3">
+    <div><img src="img/slide77.jpg" style="border-radius:10px"/></div>
+	<h5 style="color:#f5f5f5;line-height:40px;margin-bottom:20px;"><img src="img/slide44.jpg" alt="" style="float:left;margin-right:5px; border-radius: 5px; width:40px; height:auto;"/><span>Tweets by @AUTHOR</span></h5>
+	<div id="twitCt">
+	    <a class="twitter-timeline"  href="https://twitter.com/Author" data-widget-id="704231614101004288" data-chrome="noheader nofooter noborders transparent noscrollbar" data-theme="dark" data-tweet-limit="1">Tweets by @AUTHOR</a>
+	</div>
+    <hr/>
+    <p><small style="color:#666666"><!--For any inquiry, please contact the Communications Team at --><a href="#">author@gmail.com</a></small></p>
+  </div>
+</div>
+
+</div>
+<script>
+    
+	var slides = $("#sync1");
+    var preview = $("#sync2");
+	  
+    var cluster_name = $("#cluster_name");
+    var event_name = $("#event_name");
+    var picture_caption = $("#picture_caption");
+	var current_caption = "";
+	var new_caption = "";
+	var folder_size = 0;
+	
+	var carousel = {
+		current_cluster_name: $("#cluster_name"),
+		
+		
+		init: function(){
+		  this.cluster_name = $("#cluster_name"),
+		  this.slides = $("#sync1"),
+    	  this.preview = $("#sync2"),
+		  this.slides_template = Handlebars.compile($("#slides_template").html()),
+		  this.preview_template = Handlebars.compile($("#preview_template").html()),
+		  
+		  this.current_caption = "",
+		  this.new_caption = "",
+		  this.set_folder_size(),
+		  this.load_data()	  
+		},
+			
+		set_folder_size: function(){
+		  $.ajax({url:"lib/data/folder_size.php",
+			  type:'post',
+			  async: false,
+		  }).done(function(size){
+			  folder_size = size;
+		  }).fail(function(jqXHR, textStatus, errorThrown) {
+			  console.log(textStatus); 
+		  }).always(function(){});
+		},
+		
+		get_folder_size: function(){
+		  $.ajax({url:"lib/data/folder_size.php",
+			  type:'post',
+		  }).done(function(size){
+			  if (folder_size != size){
+				 window.location.reload();
+		      };
+		  }).fail(function(jqXHR, textStatus, errorThrown) {
+			  console.log(textStatus); 
+		  }).always(function(){});
+		},
+		
+		load_data: function(){
+		  $.ajax({url:"lib/data/slides.php",
+			  type:'post',
+			  dataType:'json',
+			  async:false
+		  }).done(function(data){
+			  carousel.folder_size = data.folder_size;
+			  carousel.slides.html(carousel.slides_template(data));
+			  carousel.preview.html(carousel.preview_template(data));
+			  carousel.init_slider();			  
+		  }).fail(function(jqXHR, textStatus, errorThrown) {
+			  console.log(textStatus); 
+		  }).always(function(){});
+		},
+		
+		init_slider: function(){
+			this.slides.owlCarousel({
+			  autoPlay : 8000,
+			  singleItem : true,
+			  slideSpeed : 2000,
+			  lazyLoad : false,
+			  lazyFollow : true,
+			  lazyEffect : "fade",
+			  navigation: false,
+			  pagination: false,
+			  afterAction : this.syncPosition,
+			  responsiveRefreshRate : 200
+			});
+	  
+			this.preview.owlCarousel({
+			  items : 12,
+			  itemsDesktop      : [1199,10],
+			  itemsDesktopSmall     : [979,10],
+			  itemsTablet       : [768,8],
+			  itemsMobile       : [479,4],
+			  lazyLoad : false,
+			  lazyFollow : true,
+			  lazyEffect : "fade",
+			  pagination:false,
+			  responsiveRefreshRate : 100,
+			  afterInit : function(el){
+				el.find(".owl-item").eq(0).addClass("synced");
+			  }
+			});
+		},
+
+		update_bg: function(current){
+		  picture = carousel.slides.find(".owl-item").eq(current).find('.picture');
+		  new_caption = picture.data('cluster') + " - " + picture.data('theme');
+		  if(current_caption !== new_caption){
+			picture_caption.fadeOut(1000, function(){
+				cluster_name.html("<strong style='color:#666;'>" + picture.data('file_time') + " - </strong>" + picture.data('cluster'));
+				event_name.text(picture.data('theme'));
+			}).slideDown(1000);
+			path = "url("+ picture.prop('src') +")";
+
+			$.ajax({
+				url: picture.prop('src'),
+				type: 'HEAD',
+				fail: function(){
+					window.location.reload();
+				}
+			});
+			
+			path = "url("+ picture.prop('src') +")";
+			$('#bg').delay(1000).animate({opacity: 0}, 1000, function(){$('#bg').css({backgroundImage: path})}).animate({opacity: .25}, 1000);
+			current_caption = new_caption;			  
+		  }					
+		 },
+		
+		syncPosition: function (el){
+		  var current = this.currentItem;
+		  carousel.preview
+			.find(".owl-item")
+			.removeClass("synced")
+			.eq(current)
+			.addClass("synced")
+		  carousel.update_bg(current);
+		
+		  if(carousel.preview.data("owlCarousel") !== undefined){
+			center(current)
+		  }
+		  
+		  carousel.preview.on("click", ".owl-item", function(e){
+			e.preventDefault();
+			var number = $(this).data("owlItem");
+			carousel.slides.trigger("owl.goTo",number);
+		  });
+	
+		  function center(number){
+			var sync2visible = carousel.preview.data("owlCarousel").owl.visibleItems;
+	
+			var num = number;
+			var found = false;
+			for(var i in sync2visible){
+			  if(num === sync2visible[i]){
+				var found = true;
+			  }
+			}
+	
+			if(found===false){
+			  if(num>sync2visible[sync2visible.length-1]){
+				carousel.preview.trigger("owl.goTo", num - sync2visible.length+2)
+			  }else{
+				if(num - 1 === -1){
+				  num = 0;
+				}
+				carousel.preview.trigger("owl.goTo", num);
+			  }
+			} else if(num === sync2visible[sync2visible.length-1]){
+			  carousel.preview.trigger("owl.goTo", sync2visible[1])
+			} else if(num === sync2visible[0]){
+			  carousel.preview.trigger("owl.goTo", num-1)
+			}
+		  }
+		  
+		  if(carousel.slides.owlCarousel.options.items == (current + 1)){
+			  carousel.get_folder_size();
+		  }
+		}
+  
+	}
+	
+	function updateTwitter(){
+		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+	}	
+	  
+	$(document).ready(function() {
+		carousel.init();
+				
+		$('.newsticker').newsTicker({
+		  row_height: 44,
+		  max_rows: 1,
+		  speed: 1000,
+		  direction: 'down',
+		  duration: 15000,
+		  autostart: 1,
+		  pauseOnHover: 0
+		});
+		
+		setTimeout(updateTwitter(), 900000);   
+	})
+
+		
+
+		
+	</script> 
+</body>
+</html>

@@ -1,0 +1,104 @@
+/* Owl Carousel Bootstrap Custom CSS */
+
+/* Header  */
+body{
+	background:#000;
+}
+
+.row{
+	position:relative;
+}
+
+#bg{
+	background-size:cover;
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	z-index:-1;
+}
+
+.newsticker{
+	border-radius:0 5px 5px 0;
+	padding:0;
+	margin:10px 0 0 0;
+	background: rgba(255,0,0,.5);
+	float:left;
+	width:89%;
+	overflow:hidden;
+}
+
+.newsticker_headlines{
+	border-radius: 5px 0 0 5px;
+	padding: 5px 1%;
+	margin: 10px 0 0 0;
+	background: rgba(255,0,0,1.00);
+	float: left;
+	width: 9%;
+	height: 34px;
+	line-height: 34px;
+	color: #fff;
+	font-weight: 700;
+	overflow:hidden;
+}
+
+.newsticker li{
+	height: 44px !important;
+	padding: 0 10px;
+	max-height: 44px !important;
+	font-size: 14px !important;
+	line-height: 23px;
+	color: #c5c5c5 !important;
+}
+
+#sync1 .item{
+        padding: 0;
+        margin: 5px;
+		overflow:hidden;
+        color: #FFF;
+        text-align: center;
+    }
+	
+	#sync1 .item img{
+        min-width:800px!important;
+		height:auto!important;
+    }
+	
+    #sync2 .item{
+        background: #C9C9C9;
+        padding: 0px;
+        margin: 15px 5px 5px 5px;
+        color: #FFF;
+        text-align: center;
+        cursor: pointer;
+		
+		-webkit-transition: all .5s ease-in-out 0s;
+		-moz-transition: all .5s ease-in-out 0s;
+		-ms-transition: all .5s ease-in-out 0s;
+		-o-transition: all .5s ease-in-out 0s;
+		transition: all .5s ease-in-out 0s
+    }
+	
+    #sync1 .item, #sync1 .item img, #sync2 .item, #sync2 .item img {
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+    }
+    #sync2 .synced .item{
+       margin-top: 0!important;
+    }
+
+/* CSS TWITTER WIDGET */
+div.twt-row{
+    margin: 0 0 25px 0;	
+}
+div.twt-row img{
+ display:none;
+}
+
+
+
+
+
+
